@@ -1,10 +1,10 @@
 package org.example;
 
+import org.example.Http.HttpRequest;
+import org.example.Http.HttpResponse;
 import org.example.annotation.HttpApi;
 import org.example.annotation.HttpMapping;
-import org.example.enums.HttpMethod;
 import org.reflections.Reflections;
-import sun.reflect.Reflection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

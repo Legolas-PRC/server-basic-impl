@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.impl.ServerImpl;
+import org.example.impl.BIOServerImpl;
 
 /**
  * 
@@ -9,7 +9,7 @@ import org.example.impl.ServerImpl;
  * @date 2024/11/14 16:03
  **/public class Main {
      public static void main(String[] args) {
-        Server server = new ServerImpl();
+        Server server = new BIOServerImpl();
         server.start();
     }
 }

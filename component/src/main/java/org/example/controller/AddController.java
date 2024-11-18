@@ -1,7 +1,7 @@
 package org.example.controller;
 
-import org.example.HttpRequest;
-import org.example.HttpResponse;
+import org.example.Http.HttpRequest;
+import org.example.Http.HttpResponse;
 import org.example.annotation.HttpApi;
 import org.example.annotation.HttpMapping;
 import org.example.enums.HttpMethod;
