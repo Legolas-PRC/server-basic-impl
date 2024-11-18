@@ -14,6 +14,9 @@ import java.net.Socket;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author chenqian
@@ -26,15 +29,18 @@ public class ServerImpl implements Server {
         try {
             Handler.registerHandlers(Collections.singletonList("org.example.controller"));
             ServerSocket serverSocket = new ServerSocket(10010);
+            ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
             while (true) {
+                // 阻塞，等待客户端连接
                 Socket socket = serverSocket.accept();
-                new Thread(() -> {
+                // 将连接丢到线程池里，主线程继续等待连接
+                threadPool.execute(() -> {
                     try {
                         handleClient(socket);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }).start();
+                });
             }
         } catch (IOException e) {
 
