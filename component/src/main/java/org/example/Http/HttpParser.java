@@ -52,4 +52,8 @@ public class HttpParser {
 
         return httpRequest;
     }
+
+    public static boolean isWholeMessage(String message) {
+        return message.contains("\r\n\r\n");
+    }
 }

@@ -1,17 +1,9 @@
 package org.example.impl;
 
-import org.example.Handler;
-import org.example.Http.HttpRequest;
-import org.example.Http.HttpResponse;
 import org.example.Server;
-import org.example.enums.HttpMethod;
-import org.example.enums.HttpVersion;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -41,6 +33,7 @@ public class NIOServerImpl implements Server {
             serverSocketChannel.bind(new InetSocketAddress(10010));
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
+            // Reactor:监听连接事件并分发
             while (true) {
                 // 阻塞，直到至少有一个channel可IO
                 selector.select();
@@ -51,6 +44,7 @@ public class NIOServerImpl implements Server {
                     SelectionKey selectionKey = iterator.next();
                     if (selectionKey.isAcceptable()) {
                         // 有新的socket连接，将连接注册到selector
+                        // Acceptor接收连接
                         ServerSocketChannel serverChannel = (ServerSocketChannel) selectionKey.channel();
                         SocketChannel socketChannel = serverChannel.accept();
                         socketChannel.configureBlocking(false);
@@ -58,6 +52,7 @@ public class NIOServerImpl implements Server {
                         System.out.println("Accepted connection from " + socketChannel.getRemoteAddress());
                     }else if(selectionKey.isReadable()) {
                         // socket连接有数据
+                        // handler在主线程里，只负责读和写数据，不参与业务处理，业务交给线程池
                         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
                         ByteBuffer buffer = ByteBuffer.allocate(1024);
                         int readBytes = socketChannel.read(buffer);
@@ -76,15 +71,6 @@ public class NIOServerImpl implements Server {
                 }
             }
         } catch (IOException e) {
-
-        }
-    }
-
-    class NIOHandler implements Runnable {
-        private String httpMessage;
-
-        @Override
-        public void run() {
 
         }
     }
