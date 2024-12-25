@@ -11,6 +11,7 @@
     <modules>
         <module>component</module>
         <module>BasicReactor</module>
+        <module>brick</module>
     </modules>
 
     <properties>
