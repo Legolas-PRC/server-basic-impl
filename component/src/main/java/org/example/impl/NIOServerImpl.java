@@ -1,15 +1,19 @@
 package org.example.impl;
 
 import org.example.Server;
+import org.example.utils.NetUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -21,16 +25,20 @@ import java.util.concurrent.TimeUnit;
  * @date 2024/11/18 16:59
  **/
 public class NIOServerImpl implements Server {
+    private static Logger logger = LoggerFactory.getLogger(NIOServerImpl.class);
     @Override
     public void start() {
         System.out.println("Server started.");
         try {
-            ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
+            ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 10,
+                    10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
 
+            int availablePort = NetUtils.findAvailablePort(10010);
+            logger.info(">>>>>>available port is:{}", availablePort);
             Selector selector = Selector.open();
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.configureBlocking(false);
-            serverSocketChannel.bind(new InetSocketAddress(10010));
+            serverSocketChannel.bind(new InetSocketAddress(availablePort));
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             // Reactor:监听连接事件并分发
