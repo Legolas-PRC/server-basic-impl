@@ -5,4 +5,7 @@ package org.example.codec.compress;
  * @date 2024/12/25 19:54
  **/
 public interface Compressor {
+    byte[] compress(byte[] bytes);
+
+    byte[] decompress(byte[] bytes);
 }
